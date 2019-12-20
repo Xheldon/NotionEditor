@@ -1,0 +1,68 @@
+{
+  "name": "notion-editor",
+  "version": "0.0.1",
+  "description": "a implement of notion editor based on prosemirror for test",
+  "main": "index.js",
+  "directories": {
+    "example": "example",
+    "test": "test"
+  },
+  "scripts": {
+    "dev": "rm -rf build && webpack-dev-server",
+    "build": "rm -rf build && webpack",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Xheldon/NotionEditor.git"
+  },
+  "keywords": [
+    "notion",
+    "editor",
+    "xheldon"
+  ],
+  "author": "Xheldon",
+  "license": "SEE LICENSE IN LICENSE",
+  "bugs": {
+    "url": "https://github.com/Xheldon/NotionEditor/issues"
+  },
+  "homepage": "https://github.com/Xheldon/NotionEditor#readme",
+  "devDependencies": {
+    "@types/prosemirror-commands": "^1.0.1",
+    "@types/prosemirror-history": "^1.0.1",
+    "@types/prosemirror-inputrules": "^1.0.2",
+    "@types/prosemirror-keymap": "^1.0.1",
+    "@types/prosemirror-model": "^1.7.2",
+    "@types/prosemirror-state": "^1.2.3",
+    "@types/prosemirror-transform": "^1.1.1",
+    "@types/prosemirror-view": "^1.11.2",
+    "@types/react": "^16.9.16",
+    "@types/react-dom": "^16.9.4",
+    "@types/react-redux": "^7.1.5",
+    "css-loader": "^3.2.1",
+    "html-webpack-plugin": "^3.2.0",
+    "mini-css-extract-plugin": "^0.8.0",
+    "node-sass": "^4.13.0",
+    "sass-loader": "^8.0.0",
+    "style-loader": "^1.0.1",
+    "ts-loader": "^6.2.1",
+    "typescript": "^3.7.3",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10",
+    "webpack-dev-server": "^3.9.0"
+  },
+  "dependencies": {
+    "prosemirror-commands": "^1.1.2",
+    "prosemirror-history": "^1.1.2",
+    "prosemirror-inputrules": "^1.1.2",
+    "prosemirror-keymap": "^1.1.3",
+    "prosemirror-model": "^1.8.2",
+    "prosemirror-state": "^1.3.2",
+    "prosemirror-transform": "^1.2.3",
+    "prosemirror-view": "^1.13.4",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "react-redux": "^7.1.3",
+    "redux": "^4.0.4"
+  }
+}

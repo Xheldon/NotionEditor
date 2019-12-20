@@ -1,0 +1,25 @@
+{
+    "compilerOptions": {
+      "outDir": "./build/",
+      "noImplicitAny": true,
+      "moduleResolution": "node",
+      "module": "es6",
+      "target": "es5",
+      "jsx": "react",
+      "allowJs": true,
+      "baseUrl": ".",
+      "paths": {
+        "@abstract/*": ["./app/_abstract/*"],
+        "@components/*": ["./app/components/*"],
+        "@modules/*": ["./app/modules/*"],
+        "@redux/*": ["./app/redux/*"],
+        "@utils/*": ["./app/utils/*"],
+        "@commands": ["./app/commands.ts"],
+        "@interfaces": ["./app/interfaces.ts"],
+        "@plugins": ["./app/plugins.ts"],
+        "@schemas": ["./app/schemas.ts"],
+        "@typebehinds": ["./app/typebehinds.ts"]
+      },
+      "allowSyntheticDefaultImports": true
+    }
+  }

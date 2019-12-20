@@ -1,0 +1,23 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
+#n-editor {
+    border: 1px solid blue;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+#n-component {
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    pointer-events: none;
+}
