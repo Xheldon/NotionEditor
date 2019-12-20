@@ -24,7 +24,6 @@ export const slashPopupPlugin: () => Plugin = () => new Plugin({
                 } else {
                     let old = slashPopupPluginKey.getState(oldState);
                     if (old) {
-                        console.log('start:', old.start);
                         if (oldState.selection.from !== newState.selection.from) {
                             // after typed the 'slash', only should show the pop when the cursor is after the slash, so limit the old start must lower the cursor
                             if (newState.selection.from - old.start > 9 || newState.selection.from - old.start <= 0) {

@@ -3,7 +3,7 @@ import { findWrapping, ReplaceAroundStep } from 'prosemirror-transform';
 import { Fragment, Slice } from 'prosemirror-model';
 import { insertlist } from '../../../commands';
 
-export default ({ name = 'insertlist', value, view, options}: CommandArgType): void => {
+export default ({ name = 'insertlist', value = '', view, options}: CommandArgType): void => {
     // TODO: insert a list, distinguish by options, the options has a type property which indicate the type of insert of the list, like order, unorder, todo, etc
     // the command be invoked only have one way(by now): by slash, so we should delete the range from slash to the last typed character before insert the list and then insert the list in the slash pos(the options.start pos)
     // remember we may should mapped the all content after the insert pos
@@ -18,6 +18,7 @@ export default ({ name = 'insertlist', value, view, options}: CommandArgType): v
         },
         dispatch
     } = view;
+    const { start, end } = options;
     const range = $from.blockRange($to);
     let wrap  = findWrapping(range, schema.nodes.ul);
     let content = Fragment.empty;

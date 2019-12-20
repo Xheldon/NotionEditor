@@ -19,8 +19,9 @@ const actionList = [
                 <div className={'n-insert-text'}>插入文本</div>
             );
         },
-        handler(view: EditorView, options: {start: number, end: number}) {
-            console.log('调用了');
+        handler: insertlist
+        /*
+        handler({ view, options }: { view: EditorView, options: {start: number, end: number} }) {
             // invoke the relate command
             // if the insertlist command is trigger by the slash way, we should delete the range from slash to the last typed, and then insert into the start position
             insertlist({
@@ -33,6 +34,7 @@ const actionList = [
                 }
             });
         }
+        */
     }
 ];
 
@@ -55,14 +57,17 @@ function SlashPopupView(view: EditorView, prevState: EditorState): ReactElement 
         let filterText = meta.filterText && meta.filterText.slice(1) || '';
         let childList: ReactElement[] = actionList.map((arg) => {
             if ((new RegExp(`${filterText}`, 'g')).test(arg.title)) {
-                return <div onClick={arg.handler.bind(null, view, {
-                    start: meta.start,
-                    end: meta.end
+                return <div key={arg.title} onClick={arg.handler.bind(null, {
+                    view,
+                    options: {
+                        start: meta.start,
+                        end: meta.end
+                    }
                 })}>{arg.content()}</div>
             }
         }).filter(Boolean);
         if (childList.length === 0) {
-            childList = [<div>啥也没得哩!</div>];
+            childList = [<div key={'slash-empty'}>啥也没得哩!</div>];
         }
         return (
             <div

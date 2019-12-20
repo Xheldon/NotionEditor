@@ -49,8 +49,8 @@ export const textBlock = {
         style: {
             default: ''
         },
-        contenteditable: {
-            default: true
+        'n-atom': {
+            default: ''
         }
     },
     group: 'textBlock',
