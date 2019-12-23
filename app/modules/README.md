@@ -30,7 +30,7 @@ This `module` folder contains the all element appeared in the editor. There have
         text-content        
     </div>
     <div intend-block>
-        <div other-block></div>    
+        <div block></div>    
     </div>
 </div>
 ```
@@ -41,7 +41,17 @@ This `module` folder contains the all element appeared in the editor. There have
 <div type>
     <div order>number</div>
     <div container>
-        content(other block or text-block)
+        <div text-block></div>
+    </div>
+</div>
+```
+
+```html
+<div type>
+    <div order>number</div>
+    <div container>
+        <div text-block></div>
+        <div block></div>
     </div>
 </div>
 ```

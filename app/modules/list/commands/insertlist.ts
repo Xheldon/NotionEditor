@@ -27,4 +27,9 @@ export default ({ name = 'insertlist', value = '', view, options}: CommandArgTyp
     }
     tr.step(new ReplaceAroundStep(range.start, range.end, range.start, range.end, new Slice(content, 0, 0), wrap.length, true));
     dispatch(tr);
+    /*
+        1. deleted the range from start to end
+        2. map the pos
+        3. insert the list
+    */
 }
