@@ -10,7 +10,7 @@ export const ul = {
         }
     },
     group: 'block',
-    content: '(textBlock | block | intendBlock)+',
+    content: '(textBlock | block)+',
     toDOM(node: Node): DOMOutputSpec {
         //TODO: only put partial attrs on dom
         return [

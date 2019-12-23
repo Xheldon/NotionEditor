@@ -13,6 +13,6 @@ ul structure is like(order list is same as):
         (or 1.)
     </div>
     <div>
-        content(block/textBlock/intendBlock)
+        content(block/textBlock)
     </div>
 </div>
