@@ -1,0 +1,22 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": "./tsconfig.json",
+    "ecmaVersion": 2017,
+    "ecmaFeatures": {
+      "jsx": true,
+      "experimentalObjectRestSpread": true
+    },
+    "sourceType": "module"
+  },
+  "plugins": ["prettier", "@typescript-eslint"],
+  "globals": {
+    "__rewire_reset_all__": true
+  },
+  "env": {
+    "es6": true
+  },
+  "rules": {
+    "eqeqeq": [1, "allow-null"]
+  }
+}
