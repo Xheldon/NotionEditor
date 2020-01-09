@@ -9,7 +9,7 @@ class rootComponent extends Component {
         popup: PopupStateType
     };
     render() {
-        return this.props.popup.component;
+        return this.props.popup.component || null;
     }
 }
 

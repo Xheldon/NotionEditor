@@ -5,12 +5,16 @@ export const ul = {
         class: {
             default: 'n-unordered-list'
         },
+        type: {
+            default: 'un-order-list'
+        },
         style: {
             default: ''
         }
     },
     group: 'block',
-    content: '(textBlock | block)+',
+    defining: true,
+    content: 'textBlock block*',
     toDOM(node: Node): DOMOutputSpec {
         //TODO: only put partial attrs on dom
         return [
