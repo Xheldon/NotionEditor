@@ -1,7 +1,7 @@
 import {DOMOutputSpec, Node } from 'prosemirror-model';
 
 export const doc = {
-    content: '(section | block)+'
+    content: '(block | section)+'
 };
 
 export const section = {

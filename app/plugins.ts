@@ -9,12 +9,15 @@ import { slashPopupPlugin } from '@modules/slash/plugin';
 import typebehinds from '@typebehinds';
 
 // base keymap
+import baseKeymap from '@modules/base/keymap';
 
-import basekeymap from '@modules/base/keymap';
+// module plugin
+import listPlugin from '@modules/list/plugin';
 
 export const plugins: Plugin[] = [
     typebehinds(),
-
-    // keymap(baseKeymap),
+    // selectionPlugin(),
+    listPlugin(),
+    keymap(baseKeymap),
     slashPopupPlugin()
 ];
