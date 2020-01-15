@@ -2,5 +2,9 @@
 <project version="4">
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/app/modules/README.md" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/plugins.ts" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/schemas.ts" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/utils/module-location.ts" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/utils/module-position.ts" charset="UTF-8" />
   </component>
 </project>

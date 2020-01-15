@@ -1,9 +1,14 @@
-import { EditorState } from "prosemirror-state";
+/**
+ * 此文件用来帮助定位光标在哪个 module 中
+ */
+
+import { EditorState, TextSelection } from 'prosemirror-state';
 
 export function isInTextBlock(state: EditorState): boolean {
     const $from = state.selection.$from;
     const $to = state.selection.$to;
-    if ($from.parent.type === $to.parent.type && $from.parent.type === state.schema.nodes.textBlock) return true;
+    const selection = state.selection;
+    if ($from.parent.type === $to.parent.type && $from.parent.type === state.schema.nodes.textBlock && selection instanceof TextSelection) return true;
     return false;
 }
 
