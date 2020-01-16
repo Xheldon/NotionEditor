@@ -36,10 +36,12 @@ export function findLastTextblockPosInPreviousSiblingBlockNode($pos: ResolvedPos
                 return true;
             });
             if (textBlockPos.ok) {
+                // 拿到最后一个文本块的绝对位置
                 return textBlockPos.pos + siblingPreviousNodePos + 1;
             }
             return null;
         }
         return null;
     }
+    return null;
 }

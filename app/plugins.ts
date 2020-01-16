@@ -9,7 +9,7 @@ import { slashPopupPlugin } from '@modules/slash/plugin';
 import typebehinds from '@typebehinds';
 
 // base keymap
-import baseKeymap from '@modules/base/keymap';
+import baseKeymap from './keymap';
 
 // module plugin
 import listPlugin from '@modules/list/plugin';

@@ -1,4 +1,4 @@
-# Schema 设计
+# Schema
 
 基础 schema 是两个 doc 和 text, 这是 Prosemirror 默认的两个最大和最小可编辑 schema. 而设计 schema 的时候我使用的最小编辑单元是 textblock, 表现形式是一个 div 中包含着 text, 比如:
 
@@ -20,14 +20,17 @@ section 是一个可以包含 block 的 div, 主要用途是在水平分隔多�
 
 ## paragraph
 
-### 基础形式
+### Base
 ```html
 <div type="paragraph">
     <div>一些文本</div>
 </div>
 ```
 
-### 高级形式
+### Advance
+
+此时, paragraph 有两个容器, 一个是 textblock 类型, 还一个是 block 类型
+
 ```html
 <div type="paragraph">
     <div>一些文本</div>
@@ -40,7 +43,7 @@ section 是一个可以包含 block 的 div, 主要用途是在水平分隔多�
 
 ## list(包括有序/无序/todo)
 
-### 基础形式
+### Base
 ```html
 <div type="list">
     <div>1.</div>
@@ -50,7 +53,10 @@ section 是一个可以包含 block 的 div, 主要用途是在水平分隔多�
 </div>
 ```
 
-### 高级形式
+### Advance
+
+此时, list 有两个容器, 一个是 textblock 类型, 还一个是 block 类型
+
 ```html
 <div type="list">
     <div>1.</div>
@@ -92,13 +98,13 @@ section 是一个可以包含 block 的 div, 主要用途是在水平分隔多�
 
 # 交互设计
 
-此处参照 notion 交互.
+此处参照 Notion 交互.
 
 1. 不允许跨 block 选择内容. 如, 无法选择其中一个 block 的后半部分内容后, 再选中下一个 block 的前半部分内容. 如果先选中了当前 block 的后半部分内容后, 鼠标不松开滑动到下一个 block 意图选中其前半部分, 则效果是两个 block 都被整体选中.
 
 # keymap
 
-相同按键在不同元素中的行为不同, 因此每个 module 都定义了与其相关的 keymap, 以提供给 plugin 引用
+keymap 文件定义了整个编辑器的功能键的交互行为, 此处统一处理, 不再将文件分散到各个 module 通过返回 true/false 来处理了.
 
 ## Enter
 
@@ -107,13 +113,81 @@ section 是一个可以包含 block 的 div, 主要用途是在水平分隔多�
 1. 如果是光标, 会直接在当前 block 下新建一个同级的 paragraph 元素, 除非有特殊情况(见下).
 2. 如果是选中了内容, 则会将内容删除, 然后再下面新建一个同级的 paragraph 元素, 除非有特殊情况(见下).
 3. 如果选中了内容, 且内容后还有文本, 则会将选中内容删除, 然后将选区后的内容放到下一个 paragraph 中, 除非有特殊情况(见下).
-4. 如果选中了整个 node 节点, 则什么也不做, 取消选区.
+4. 如果选中了非原子节点的整个 node 节点, 则什么也不做, 取消选区.
+5. 如果选择了原子节点, 则在原子节点之后新建一个同级的 paragraph.
 
-### 在 list 中
+### 复杂情况
+
+#### 在 list 的 textblock 中
 
 会在当前 section 下新建一个同类型的 list block, 光标/选区/选区后还有内容的情况与一般情况相同.
 
-### 在 codeblock 中
+#### 在 codeblock 中
 
 会直接换行, 光标/选区/选区后还有内容的情况与一般情况相同.
 
+## Backspace
+
+### 一般情况
+
+1. 如果是光标, 则删除光标前的一个字符
+2. 如果是选区, 则删除选区内容
+3. 如果光标在文本的最前方按下 backspace, 则属于复杂情况
+
+### 复杂情况
+
+#### 在 list 附近
+
+1. 如果光标所在的 textblock 父级 block 是 paragraph, 且与 paragraph 同级的上一个 block 是 list, 则寻找 list 的最后一个 textblock 的 end 位置(该位置可能在 list 的 block 容器中, 也可能直接就是 list 的 textblock), 将光标所在的文本块的文本内容附加到 end 之后, 然后删除文本块及其父级 block.
+   1. 注意, 如果上一个 list 还有其子 block 类型的容器, 则重复相同步步骤, 直到找到 block 类型容器中的 textblock
+   2. 注意, 如果 paragraph 含有其自己的 block 容器, 则在 textblock 内容附加到上一行后, 将其 block 容器内容每个"提升一级"
+2. 如果光标所在的 paragraph 本身处于 list 的 block 容器中, 则首先将本 paragraph 提高到和其父级 list 同级, 如果仍然在 list 的 block 容器中则继续, 直到其为 doc 的直接子元素, 然后执行步骤 1.
+3. 如果光标所在的 textblock 的父级是 list, 则将该 list 变为 paragraph, 保留 textblock 内容, 同时如果该 list 有 block 容器, 则将该容器作为 paragraph 的 block 容器
+
+#### 在 paragraph 附近
+
+1. 如果光标所在的 textblock 的父级是 paragraph, 且其前一个同级 block 也是 paragraph, 则将光标所在的 textblock 的文本放到 上一个 paragraph 中的最后一个 textblock 之后.
+   1. 注意: 如果光标所在的 textblock 的父级 paragraph 还有 block 容器, 则将容器内容每个"提升一级"
+2. 如果光标所在的 textblock 的父级 paragraph 本身也在另一个 paragraph 的 block 容器中, 则其将会先变成同级关系.
+
+#### 在其他含有 textblock 的附近
+
+1. 首先将该 block 变成 paragraph, 然后按照上述两种情况处理
+
+#### 注意
+
+1. Notion 有个特别交互, 有如下结构:
+
+```html
+<ol>
+    <li>
+        <div>1. </div>
+        <div>
+            <div textblock>
+                abc
+            </div>
+            <div block>
+                <div p1>
+                    <div textblock>def</div>
+                </div>
+                <div p2>
+                    <div textblock>ghi</div>
+                </div>
+                <div p3>
+                    <div textblock>klm</div>
+                </div>
+            </div>
+        </div>
+    </li>
+</ol>        
+```
+
+则在 d 之前按 backspace 时, def 会拼接到 abc 之后, 然后剩余的两个 ghi 和 klm 不变
+
+在 g 之前按 backspace 时, 同样, ghi 会拼接到 def 之后, 然后剩余的 kml 不变
+
+但是在 k 之前按 backspace 时, klm 会往前反缩进, 变成与 li 同级的 p 标签.
+
+即: 在内嵌的 block 容器中(li 中或者 p 中都允许存在)的`最后一个` p 标签开始位置按下删除键, 则会取消缩进(反缩进), 变成与父级同级的元素. 但是在非最后位置的 p 标签中的开始位置按下删除键, 则只是将其附加到上一个 textblock 最后. 如果 `最后一个也是第一个元素`, 则`最后一个`逻辑优先, 即其会取消缩进.
+
+其实这是一个 feature: 用户在一个 list 中, 按下回车后会继承当前行的缩进和类型, 如上例中, 在 abc 后按回车, 则新建一个 list. 而在 klm 后按回车, 则继续在 block 容器中新建一个 p 标签. 如果用户此时或者在最后一行输入文字后在行首按下 backspace 多半是想要取消缩进跳出 list 的 block 容器, 而不是想要回到上一行 paragraph 中.
