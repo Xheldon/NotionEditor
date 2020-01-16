@@ -1,9 +1,9 @@
-import { EditorState, Selection, TextSelection, NodeSelection } from "prosemirror-state";
+import { EditorState, Selection, TextSelection } from "prosemirror-state";
 import { EditorView } from "prosemirror-view";
 
 import { isInTextBlock } from '@utils/module-location';
 import { ResolvedPos } from "prosemirror-model";
-import { Fragment } from "react";
+import { findLastTextblockPosInPreviousSiblingBlockNode } from '@utils/module-position';
 
 export default {
     Enter: (state: EditorState, dispatch: Function, view: EditorView) => {
@@ -59,6 +59,8 @@ export default {
                     // 当前光标在首位, 按删除键需要将当前文本节点的内容附加到上一个 paragraph 的文本块末尾
                     // 如果上一个 paragraph 是复杂形式, 即其不但含有 textblock, 还含有 block, 则将 $from 所在的文本放到上一个 paragraph 的最后一个含有文本节点的子 block 的末尾
                     // 应该需要一个通用函数叫 findLastTextblockPosInPreviousBlockNode 然后用最后一个文本块的结束位置插入即可
+                    console.log('beckspace:', $from.pos);
+                    findLastTextblockPosInPreviousSiblingBlockNode($from);
                 }
             }
         } else {

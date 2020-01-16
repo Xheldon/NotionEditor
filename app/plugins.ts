@@ -14,10 +14,14 @@ import baseKeymap from '@modules/base/keymap';
 // module plugin
 import listPlugin from '@modules/list/plugin';
 
+// debugger plugin
+import debug from '@modules/debug/debug';
+
 export const plugins: Plugin[] = [
     typebehinds(),
     // selectionPlugin(),
     listPlugin(),
     keymap(baseKeymap),
-    slashPopupPlugin()
+    slashPopupPlugin(),
+    debug()
 ];
