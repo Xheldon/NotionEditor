@@ -24,7 +24,22 @@ export function findLastTextblockPosInPreviousSiblingBlockNode($pos: ResolvedPos
         const siblingPreviousNode = $thisNode.parent.childBefore($thisNode.parentOffset);
         console.log('上一个:', siblingPreviousNode);
         // 获取上一个 block 的 pos
-        const siblingPreviousNodePos = thisNode - siblingPreviousNode.node.nodeSize;
-
+        if (siblingPreviousNode.node) {
+            const siblingPreviousNodePos = thisNode - siblingPreviousNode.node.nodeSize;
+            let textBlockPos: {ok: null | boolean, pos: number} = {ok: null, pos: 0};
+            $pos.doc.nodesBetween(siblingPreviousNodePos, thisNode, (node, pos, parent, index) => {
+                // 如果迭代到 textblock 就赋值, 一直赋值到最后一个 textblock 的 pos(相对父级的 pos)
+                if (node.type === $pos.doc.type.schema.nodes.textBlock) {
+                    textBlockPos = { ok: true, pos };
+                    return false;
+                }
+                return true;
+            });
+            if (textBlockPos.ok) {
+                return textBlockPos.pos + siblingPreviousNodePos + 1;
+            }
+            return null;
+        }
+        return null;
     }
 }
