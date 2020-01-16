@@ -12,9 +12,9 @@
 
 text < textblock < block < section
 
-block 包含的元素有: paragraph, blockquote, list, heading, divider, codeblock
+block 类型的元素有: paragraph, blockquote, list, heading, divider, codeblock
 
-section 是一个可以包含 block 的 div, 主要用途是在水平分隔多列上, 以让每个 section 包含多个 block. section 包含的元素有: section
+section 是一个可以包含 block 的 div, 主要用途是在水平分隔多列上, 以让每个 section 包含多个 block. section 类型的元素有: section
 
 # 元素结构示例
 
@@ -38,7 +38,7 @@ section 是一个可以包含 block 的 div, 主要用途是在水平分隔多�
 </div>
 ```
 
-此外, 段落的缩进被用样式来实现.
+此外, 段落的缩进有两种情况, 一个是当前段落是顶级元素, 则缩进时使用样式来实现; 如果当前段落之前也有段落或者 list, 则 tab 后会将带段落变成上一个段落/list 的 block 容器中的元素
 
 
 ## list(包括有序/无序/todo)
@@ -93,14 +93,14 @@ section 是一个可以包含 block 的 div, 主要用途是在水平分隔多�
 ```html
 <div type="section">
     <div type="block-type"></div>
-</>
+</div>
 ```
 
 # 交互设计
 
 此处参照 Notion 交互.
 
-1. 不允许跨 block 选择内容. 如, 无法选择其中一个 block 的后半部分内容后, 再选中下一个 block 的前半部分内容. 如果先选中了当前 block 的后半部分内容后, 鼠标不松开滑动到下一个 block 意图选中其前半部分, 则效果是两个 block 都被整体选中.
+1. 不允许跨 block 选择部分文本内容. 如, 无法选择其中一个 block 的后半部分内容后, 再选中下一个 block 的前半部分内容. 如果先选中了当前 block 的后半部分内容后, 鼠标不松开滑动到下一个 block 意图选中其前半部分, 则效果是两个 block 都被整体选中.
 
 # keymap
 
@@ -125,6 +125,10 @@ keymap 文件定义了整个编辑器的功能键的交互行为, 此处统一�
 #### 在 codeblock 中
 
 会直接换行, 光标/选区/选区后还有内容的情况与一般情况相同.
+
+#### 当 slash 弹窗出现时
+
+回车键按下后执行选中的插入命令. 插入位置是跟当前 textblock 父级节点同级
 
 ## Backspace
 
@@ -191,3 +195,9 @@ keymap 文件定义了整个编辑器的功能键的交互行为, 此处统一�
 即: 在内嵌的 block 容器中(li 中或者 p 中都允许存在)的`最后一个` p 标签开始位置按下删除键, 则会取消缩进(反缩进), 变成与父级同级的元素. 但是在非最后位置的 p 标签中的开始位置按下删除键, 则只是将其附加到上一个 textblock 最后. 如果 `最后一个也是第一个元素`, 则`最后一个`逻辑优先, 即其会取消缩进.
 
 其实这是一个 feature: 用户在一个 list 中, 按下回车后会继承当前行的缩进和类型, 如上例中, 在 abc 后按回车, 则新建一个 list. 而在 klm 后按回车, 则继续在 block 容器中新建一个 p 标签. 如果用户此时或者在最后一行输入文字后在行首按下 backspace 多半是想要取消缩进跳出 list 的 block 容器, 而不是想要回到上一行 paragraph 中.
+
+## 上下左右键
+
+### 一般情况
+
+1. 当 slash 弹窗出来的时候控制选中的命令, 否则走系统默认
