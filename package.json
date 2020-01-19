@@ -28,6 +28,7 @@
   },
   "homepage": "https://github.com/Xheldon/NotionEditor#readme",
   "devDependencies": {
+    "@types/lodash": "^4.14.149",
     "@types/prosemirror-commands": "^1.0.1",
     "@types/prosemirror-history": "^1.0.1",
     "@types/prosemirror-inputrules": "^1.0.2",
@@ -57,6 +58,7 @@
     "webpack-dev-server": "^3.9.0"
   },
   "dependencies": {
+    "lodash": "^4.17.15",
     "prosemirror-commands": "^1.1.2",
     "prosemirror-history": "^1.1.2",
     "prosemirror-inputrules": "^1.1.2",

@@ -14,7 +14,7 @@ export function findAllListAndParagraphPos($pos: ResolvedPos) {
 }
 
 // 找到当前 resolvedPos 所在的 block 之前的兄弟 block 的最后一个 textblock, 用来处理在首位删除的操作
-export function findLastTextblockPosInPreviousSiblingBlockNode($pos: ResolvedPos) {
+export function findLastTextblockPosInPreviousSiblingBlockNode($pos: ResolvedPos): number | null {
     // 获取当前 $pos 的 block 起始位置
     const thisNode = $pos.before(-1);
     if (thisNode != null) {
@@ -42,6 +42,18 @@ export function findLastTextblockPosInPreviousSiblingBlockNode($pos: ResolvedPos
             return null;
         }
         return null;
+    }
+    return null;
+}
+
+export function findPreviousSiblingBlockNodePos($pos: ResolvedPos): number {
+    const thisNode = $pos.before(-1);
+    if (thisNode != null) {
+        const $thisNode = $pos.doc.resolve(thisNode);
+        const siblingPreviousNode = $thisNode.parent.childBefore($thisNode.parentOffset);
+        if (siblingPreviousNode.node) {
+            return thisNode - siblingPreviousNode.node.nodeSize;
+        }
     }
     return null;
 }

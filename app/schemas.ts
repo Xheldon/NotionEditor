@@ -2,7 +2,7 @@ import { Schema } from 'prosemirror-model';
 
 import { doc, section, textBlock, text } from '@modules/base/schema';
 import { p } from '@modules/paragraph/schema';
-import { ul } from '@modules/list/schema';
+import { ul, ol } from '@modules/list/schema';
 
 export const schemas: Schema = new Schema({
     nodes: {
@@ -11,6 +11,7 @@ export const schemas: Schema = new Schema({
         textBlock,
         p,
         ul,
+        ol,
         section
     },
     marks: {}

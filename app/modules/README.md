@@ -66,13 +66,23 @@ section 是一个可以包含 block 的 div, 主要用途是在水平分隔多�
     </div>
 </div>
 ```
-## 其他非原子元素(heading/blockquote/codeblock)
+## 非原子元素
+
+### heading/blockquote/codeblock
 
 ```html
 <div type="block-type">
     <div>一些文本</div>
 </div>
 ```
+
+### table
+
+table 也是用 div 模拟. TODO
+
+### media(video/audio)
+
+预计使用 embeded 元素实现, 嵌入三方视频需要商业付费, TODO
 
 ## 原子元素
 
@@ -104,7 +114,7 @@ section 是一个可以包含 block 的 div, 主要用途是在水平分隔多�
 
 # keymap
 
-keymap 文件定义了整个编辑器的功能键的交互行为, 此处统一处理, 不再将文件分散到各个 module 通过返回 true/false 来处理了.
+keymap 文件定义了整个编辑器的功能键的交互行为, 此处统一处理, 不再将文件分散到各个 module 通过返回 true/false 来处理.
 
 ## Enter
 

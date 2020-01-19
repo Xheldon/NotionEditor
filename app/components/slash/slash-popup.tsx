@@ -3,10 +3,10 @@ import { EditorView } from 'prosemirror-view';
 import { EditorState } from 'prosemirror-state';
 
 import { slashPopupPluginKey } from '@modules/slash/plugin';
-import { insertlist } from '@commands';
+import { insertlist, insertparagraph } from '@commands';
+import { StateType } from '@redux/interface';
 
 import './style.scss';
-import { act } from 'react-dom/test-utils';
 
 // make a list which has a title property to filter, a content to show and a handler to response;
 
@@ -16,10 +16,10 @@ const actionList = [
         title: 'unorderlist',
         content(): ReactElement {
             return (
-                <div className={'n-insert-text'}>插入文本</div>
+                <div className={'n-insert-ul'}>插入列表</div>
             );
         },
-        handler: insertlist
+        handler: insertlist,
         /*
         handler({ view, options }: { view: EditorView, options: {start: number, end: number} }) {
             // invoke the relate command
@@ -35,10 +35,16 @@ const actionList = [
             });
         }
         */
+    }, {
+        title: 'paragraph',
+        content(): ReactElement {
+            return <div className={'n-insert-p'}>插入文本</div>
+        },
+        handler: insertparagraph
     }
 ];
 
-function SlashPopupView(view: EditorView, prevState: EditorState): ReactElement {
+function SlashPopupView(view: EditorView, prevState: EditorState, reduxState: StateType): ReactElement {
     let state = view.state; // new state;
     if (
         prevState && prevState.doc.eq(state.doc)
@@ -55,9 +61,10 @@ function SlashPopupView(view: EditorView, prevState: EditorState): ReactElement 
             top: pos.bottom + 'px'
         };
         let filterText = meta.filterText && meta.filterText.slice(1) || '';
-        let childList: ReactElement[] = actionList.map((arg) => {
+        let childList: ReactElement[] = actionList.map((arg, k) => {
             if ((new RegExp(`${filterText}`, 'g')).test(arg.title)) {
-                return <div key={arg.title} onClick={arg.handler.bind(null, {
+                const isActive = k === 0 || reduxState.popup.options.currentSelect === arg.title;
+                return <div className={isActive ? 'active' : ''} key={arg.title} onClick={arg.handler.bind(null, {
                     view,
                     options: {
                         start: meta.start,

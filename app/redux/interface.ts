@@ -14,19 +14,24 @@ export interface StateType {
 export interface PopupStateType {
     component?: ReactElement;
     view?: EditorView;
-    options?: object;
+    options?: any;
 }
 
 export interface ReactViewType {
     type: string;
-    component: (view: EditorView, prevState: EditorState) => ReactElement;
+    component: (view: EditorView, prevState: EditorState, reduxState: StateType) => ReactElement;
     view: EditorView;
-    options?: object;
+    options?: any;
 }
 
 export interface PopupType {
     type: string;
     component: ReactElement;
     view?: EditorView;
-    options?: object;
+    options?: any;
+}
+
+export interface SelectType {
+    type: string;
+    options?: any
 }

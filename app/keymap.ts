@@ -1,9 +1,12 @@
-import { EditorState, Selection, TextSelection } from "prosemirror-state";
+import { EditorState, Selection, TextSelection, NodeSelection, AllSelection } from "prosemirror-state";
 import { EditorView } from "prosemirror-view";
-
-import { isInTextBlock } from '@utils/module-location';
 import { ResolvedPos } from "prosemirror-model";
+
+import { isInTextBlock, isInCodeBlock, isInList } from '@utils/module-location';
 import { findLastTextblockPosInPreviousSiblingBlockNode } from '@utils/module-position';
+import { getSlashStatus, getState } from '@redux/selector';
+import { rdxDispatch } from '@redux/store';
+import { selectInsert } from '@redux/actions';
 
 export default {
     Enter: (state: EditorState, dispatch: Function, view: EditorView) => {
@@ -11,31 +14,63 @@ export default {
         const $from: ResolvedPos = selection.$from;
         const $to: ResolvedPos = selection.$to;
         const tr = state.tr;
-        // 如果在非 list 中, 则在当前节点同级直接插入一个新的 paragraph
-        // 需要考虑光标在的位置之后是否有内容, 有的话需要将其放入新 paragraph 中
-        if (isInTextBlock(state)) {
-            // 获取到当前文本块节点的父级的后面位置
-            const insertPos = $from.after(-1);
-            // 获取当前文本节点的最后位置
-            const end = $from.end();
-            // 得到当前选区结束位置到最后的部分生成 slice
-            const slice = state.doc.slice($to.pos, end);
-            // 构建一个 paragraph, 将 slice 的 content 当做其内容, 此处可以直接写 create, 也可以使用 findWrapper 工具函数
-            // 二者的属性都使用默认值
-            const node = state.schema.nodes.p.create(null, state.schema.nodes.textBlock.create(null, slice.content));
-            // 然后删除从 from 到 end 的内容
-            tr.delete($from.pos, end);
-            // 因为之前的 delete 操作, 需要 mapping pos
-            const mappedPos = tr.mapping.map(insertPos);
-            // 插入
-            tr.insert(mappedPos, node);
-            // 此时已经插入成功, 但是光标还在上面, 因此移动这个光标(新建一个 TextSelection 即可)
-            tr.setSelection(TextSelection.create(tr.doc, mappedPos + 2));
-            dispatch(tr.scrollIntoView());
-            return true;
+        // 获取 nodesType 映射
+        const _nodes = state.schema.nodes;
+        if (getSlashStatus()) {
+            // slash 出现的时候是选择插入状态, 按下 enter 的时候一定是光标状态, 且一定在 textblock 中, 因此按下 enter 会插入不同类型的 block
+            console.log('getState:', getState());
         } else {
-            // 否则理论上应该会有其他模块处理选区, 当前选区应该是 nodeblock
-            return false;
+            // 如果在非 list 中, 则在当前节点同级直接插入一个新的 paragraph
+            // 需要考虑光标在的位置之后是否有内容, 有的话需要将其放入新 paragraph 中
+            if (isInTextBlock(state)) {
+                // 获取到当前文本块节点的父级的后面位置
+                const insertPos = $from.after(-1);
+                // 获取当前文本节点的最后位置
+                const end = $from.end();
+                // 得到当前选区结束位置到最后的部分生成 slice
+                const slice = state.doc.slice($to.pos, end);
+                const currentNode = $from.node(-1);
+                let insertNode = null;
+                if (isInCodeBlock(state)) {
+                    tr.delete($from.pos, $to.pos);
+                    // 在 codeblock 中, 仅换行即可, 因此插入一个换行符
+                    tr.insert(tr.mapping.map($to.pos), _nodes.text.create(null, '\n'));
+                } else {
+                    if (isInList(state)) {
+                        // 在 ul 中, 换行后在下一行插入一个 li
+                        // 在 ol 中, 换行后在下一行插入一个 li, 同时读取当前 li 的 order 属性, 并 +1
+                        // 在 todo 中, 换行后在下一行插入一个 li
+                        // NOTE: 因为插入后的节点跟当前节点是一个类型, 因此也可以考虑插入一个 slice, 设置好 open 和 close 的深度即可, 此处常规处理, 即找到插入点, 插入一个 node
+                        if (currentNode.type !== _nodes.ol) {
+                            insertNode = _nodes[currentNode.type.name].create(null, _nodes.textBlock.create(null, slice.content));    
+                        } else {
+                            const currentOrder = currentNode.attrs.order || 1;
+                            insertNode = _nodes.ol.create(null, _nodes.textBlock.create({
+                                order: currentOrder + 1
+                            }, slice.content));  
+                        }
+                    } else {
+                        // 此时应该位于普通非原子节点的 block 中, 如 blockquote, heading 等
+                        // 构建一个 paragraph, 将 slice 的 content 当做其内容, 此处可以直接写 create, 也可以使用 findWrapper 工具函数
+                        // 二者的属性都使用默认值
+                        insertNode = _nodes.p.create(null, _nodes.textBlock.create(null, slice.content));
+                    }
+                     // 然后删除从 from 到 end 的内容
+                     tr.delete($from.pos, end);
+                     // 因为之前的 delete 操作, 需要 mapping pos
+                     const mappedPos = tr.mapping.map(insertPos);
+                    // 插入
+                    tr.insert(mappedPos, insertNode);
+                    // 此时已经插入成功, 但是光标还在上面, 因此移动这个光标(新建一个 TextSelection 即可)
+                    tr.setSelection(TextSelection.create(tr.doc, mappedPos + 2));
+                    dispatch(tr.scrollIntoView());
+                    return true;
+                }
+            } else if (selection instanceof NodeSelection || selection instanceof AllSelection) {
+                // 否则理论上应该会有其他模块处理选区, 当前选区应该是 nodeblock, 则在其下插入一个 paragraph
+                tr.insert($to.pos +2, _nodes.p.create(null, _nodes.textBlock.create(null, _nodes.text.create(null, ''))));
+                return true;
+            }
         }
         return false;
     },
@@ -47,6 +82,7 @@ export default {
         const $from = selection.$from;
         const $to = selection.$to;
         const tr = state.tr;
+        // 如果选区首尾都在 textblock 中
         if (isInTextBlock(state)) {
             // 如果是光标, 则删除前一个位置
             if ((<TextSelection>selection).$cursor) {
@@ -71,5 +107,19 @@ export default {
         } else {
 
         }
+    },
+    ArrowUp: (state: EditorState, dispatch: Function, view: EditorView) => {
+        // TODO: 当 slash 出现的时候, 操作选项框
+        if (getSlashStatus()) {
+            rdxDispatch(selectInsert({
+                type: 'SELECT_SLASH_POPUP',
+                options: {
+                    currentSelect: 'insertparagraph'
+                }
+            }));
+        }
+    },
+    ArrowDown: (state: EditorState, dispatch: Function, view: EditorView) => {
+        // TODO: 当 slash 出现的时候, 操作选项框
     }
 }

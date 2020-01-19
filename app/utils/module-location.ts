@@ -4,6 +4,8 @@
 
 import { EditorState, TextSelection } from 'prosemirror-state';
 
+const listType = ['ul', 'ol', 'todo']
+
 export function isInTextBlock(state: EditorState): boolean {
     const $from = state.selection.$from;
     const $to = state.selection.$to;
@@ -16,4 +18,16 @@ export function isInParagraph(state: EditorState): boolean {
     const $from = state.selection.$from;
     if ($from.node(-1).type === state.schema.nodes.p) return true;
     return false;
+}
+
+export function isInList(state: EditorState): boolean {
+    const selection = state.selection;
+    const $from = selection.$from;
+    return isInTextBlock(state) && listType.includes($from.node(-1).type.name);
+}
+
+export function isInCodeBlock(state: EditorState): boolean {
+    const selection = state.selection;
+    const $from = selection.$from;
+    return isInTextBlock(state) && $from.node(-1).type === state.schema.nodes.code;
 }
