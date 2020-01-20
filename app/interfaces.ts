@@ -37,3 +37,7 @@ export interface CommandArgType {
     };
 }
 
+export interface SelectType {
+    type: string;
+    options?: any
+}

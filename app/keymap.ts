@@ -117,9 +117,24 @@ export default {
                     currentSelect: 'insertparagraph'
                 }
             }));
+            dispatch(state.tr);
+            return true;
         }
+        return false;
     },
     ArrowDown: (state: EditorState, dispatch: Function, view: EditorView) => {
         // TODO: 当 slash 出现的时候, 操作选项框
+        // TODO: 当 slash 出现的时候, 操作选项框
+        if (getSlashStatus()) {
+            rdxDispatch(selectInsert({
+                type: 'SELECT_SLASH_POPUP',
+                options: {
+                    currentSelect: 'insertparagraph'
+                }
+            }));
+            dispatch(state.tr);
+            return true;
+        }
+        return false;
     }
 }

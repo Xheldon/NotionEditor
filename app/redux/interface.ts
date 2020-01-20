@@ -30,8 +30,3 @@ export interface PopupType {
     view?: EditorView;
     options?: any;
 }
-
-export interface SelectType {
-    type: string;
-    options?: any
-}

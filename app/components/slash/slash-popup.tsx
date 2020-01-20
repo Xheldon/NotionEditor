@@ -45,6 +45,7 @@ const actionList = [
 ];
 
 function SlashPopupView(view: EditorView, prevState: EditorState, reduxState: StateType): ReactElement {
+    console.log('按下箭头, 能否执行到此?');
     let state = view.state; // new state;
     if (
         prevState && prevState.doc.eq(state.doc)
@@ -63,8 +64,8 @@ function SlashPopupView(view: EditorView, prevState: EditorState, reduxState: St
         let filterText = meta.filterText && meta.filterText.slice(1) || '';
         let childList: ReactElement[] = actionList.map((arg, k) => {
             if ((new RegExp(`${filterText}`, 'g')).test(arg.title)) {
-                const isActive = k === 0 || reduxState.popup.options.currentSelect === arg.title;
-                return <div className={isActive ? 'active' : ''} key={arg.title} onClick={arg.handler.bind(null, {
+                // const isActive = k === 0 || reduxState.popup.options.currentSelect === arg.title;
+                return <div className={false ? 'active' : ''} key={arg.title} onClick={arg.handler.bind(null, {
                     view,
                     options: {
                         start: meta.start,

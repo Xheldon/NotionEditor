@@ -211,3 +211,21 @@ keymap 文件定义了整个编辑器的功能键的交互行为, 此处统一�
 ### 一般情况
 
 1. 当 slash 弹窗出来的时候控制选中的命令, 否则走系统默认
+
+
+# React 组件
+
+使用了 React 构建界面的有: Slash
+
+之前实现弹窗等界面的方案:
+
+1. 使用 typebehind 触发 slash plugin 的 setMeta, 信息为 slash 符号的起始和结束位置
+2. 在 slash plugin 的 apply 中 getMeta, 拿到然后设置 plugin state, 同时进行新旧 start 和 end 的对比, 同时获取 slash 符号起始位置直到新的 state selection 的 end 位置的字符 filtertext
+3. 拿到 start 和 end 和 filtertext 字符之后, slash plugin 的 view 就会据此渲染 react 组件, 同时通过 coordsAtPos 知道输入 slash 和 filtertext 的位置, 显示出来
+4. react 组件有自己的 list, 每输入一个字符, slash plugin 的 view 的 update 方法就调用一次, react list 就会通过通过正则 filtertext 过滤部分的 list, 然后显示.
+
+此方案有以下问题:
+
+1. 我想在 keymap 中当 slash 弹窗出现时使用 ArrowUp/ArrowDown 来选择某个 list 由于每次 react list 都会随着 变得较为困难
+
+基本数据流是: `prosemirror` typebehind ---> `prosemirror` plugin state update ---> `prosemirror` view update ---> `react` component update(with new plugin state)
