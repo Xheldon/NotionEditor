@@ -68,7 +68,7 @@ export default {
                 }
             } else if (selection instanceof NodeSelection || selection instanceof AllSelection) {
                 // 否则理论上应该会有其他模块处理选区, 当前选区应该是 nodeblock, 则在其下插入一个 paragraph
-                tr.insert($to.pos +2, _nodes.p.create(null, _nodes.textBlock.create(null, _nodes.text.create(null, ''))));
+                tr.insert($to.pos + 2, _nodes.p.create(null, _nodes.textBlock.create(null, _nodes.text.create(null, ''))));
                 return true;
             }
         }

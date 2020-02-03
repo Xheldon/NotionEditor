@@ -29,6 +29,7 @@ export const slashPopupPlugin: () => Plugin = () => new Plugin({
                             if (newState.selection.from - old.start > 9 || newState.selection.from - old.start <= 0) {
                                 return null;
                             } else {
+                                // 此处 rdxDispatch 一个 action
                                 return {
                                     start: old.start,
                                     end: newState.selection.from,
@@ -42,12 +43,5 @@ export const slashPopupPlugin: () => Plugin = () => new Plugin({
                 }
             }
         }
-    },
-    view(view): ViewReturn {
-        return new View({
-            type: SHOW_SLASH_POPUP,
-            component: SlashPopupView,
-            view
-        });
     }
 });
