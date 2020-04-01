@@ -1,7 +1,7 @@
 # NotionEditor
 A Notion's editor implement based on ProseMirror, just for feasibility studies.
 
-# Detail 设计细节
+# Detail 设计细节(WIP)
 
 ## Schema
 
