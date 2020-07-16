@@ -7,14 +7,25 @@ export interface ActionType {
     payload: any
 }
 
+/**
+ * state 的数据结构:
+ * state {
+ *     popup: {
+ *         component: ReactElement; 预置的
+ *         currentIndex: number; 当前激活 list 的哪个项
+ *         show: boolean; 触发的时候由 action 设置
+ *         options: any; 由 ProseMirror 提供
+ *     }
+ * }
+ */
+
 export interface StateType {
     popup?: PopupStateType
 }
 
 export interface PopupStateType {
-    component?: ReactElement;
-    view?: EditorView;
     options?: any;
+    currentIndex?: number;
 }
 
 export interface ReactViewType {
@@ -24,9 +35,3 @@ export interface ReactViewType {
     options?: any;
 }
 
-export interface PopupType {
-    type: string;
-    component: ReactElement;
-    view?: EditorView;
-    options?: any;
-}

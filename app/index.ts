@@ -36,8 +36,8 @@ const state = EditorState.create({
 const view = new EditorView({ mount: root }, {
     state,
     editable(view): boolean {
-        // Note: At the beginning, i want to design the structure like notion, such as not make the whole document contenteditable make the atom block instead to
-        // but there is a problem which make the plugin view not update, so i have to return it back, sad.
+        // Note: 一开始的时候我打算将编辑器做成跟 Notion 一样, 每个 block 有 contenteditable 属性, 而不是只在根节点有一个 contenteditable 属性
+        //  但是发现如此实现的话插件的 view 无法正常更新, 因此放弃, sad
         return true;
     },
     attributes(state) {

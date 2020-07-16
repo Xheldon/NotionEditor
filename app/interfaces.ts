@@ -21,7 +21,6 @@ export {
     StateType,
     PopupStateType,
     ReactViewType,
-    PopupType
 } from '@redux/interface';
 
 /*
@@ -37,7 +36,11 @@ export interface CommandArgType {
     };
 }
 
-export interface SelectType {
-    type: string;
-    options?: any
+/**
+ * Editor type
+ */
+
+export interface EditorType {
+    view: EditorView;
+    state: EditorState;
 }

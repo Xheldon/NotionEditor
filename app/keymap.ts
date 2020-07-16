@@ -34,7 +34,8 @@ export default {
                 if (isInCodeBlock(state)) {
                     tr.delete($from.pos, $to.pos);
                     // 在 codeblock 中, 仅换行即可, 因此插入一个换行符
-                    tr.insert(tr.mapping.map($to.pos), _nodes.text.create(null, '\n'));
+                    // text ndde 的创建方式跟其他的 node 不同, 不能用 constructor 创建
+                    tr.insert(tr.mapping.map($to.pos), state.schema.text('\n'));
                 } else {
                     if (isInList(state)) {
                         // 在 ul 中, 换行后在下一行插入一个 li

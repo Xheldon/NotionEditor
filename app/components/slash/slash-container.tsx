@@ -1,12 +1,17 @@
-import React, { ReactElement } from 'react';
+import React, { ReactElement, Component } from 'react';
+import { connect } from 'react-redux';
+import { compose } from 'recompose';
+
 import { EditorView } from 'prosemirror-view';
 import { EditorState } from 'prosemirror-state';
 
 import { slashPopupPluginKey } from '@modules/slash/plugin';
 import { insertlist, insertparagraph } from '@commands';
-import { StateType } from '@redux/interface';
+import { StateType, EditorType } from '@interfaces';
+
 
 import './style.scss';
+import { withEditor } from '@components/context';
 
 // make a list which has a title property to filter, a content to show and a handler to response;
 
@@ -44,8 +49,38 @@ const actionList = [
     }
 ];
 
+function SlashPopupContainer({ show, options, editor }: {
+    show: boolean;
+    options: any;
+    editor: EditorType;
+}) {
+    let { start, end, text } = options;
+    let style = null;
+    if (show) {
+        let pos = editor.view.coordsAtPos(start);
+        style = {
+            left: pos.left + 'px',
+            top: pos.bottom + 'px'
+        };
+        return <div className={}></div>
+    }
+}
+
+const mapStateToProps = (state: StateType) => {
+    return {
+        ...state.popup
+    }
+};
+
+// for test purpose
+export const SlashPopupContainerComponent = SlashPopupContainer;
+
+export default compose(
+    withEditor,
+    connect(mapStateToProps)
+)(SlashPopupContainer);
+
 function SlashPopupView(view: EditorView, prevState: EditorState, reduxState: StateType): ReactElement {
-    console.log('按下箭头, 能否执行到此?');
     let state = view.state; // new state;
     if (
         prevState && prevState.doc.eq(state.doc)
@@ -88,5 +123,3 @@ function SlashPopupView(view: EditorView, prevState: EditorState, reduxState: St
     }
     return null;
 }
-
-export default SlashPopupView;
