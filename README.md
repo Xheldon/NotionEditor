@@ -1,5 +1,7 @@
 # WARNING: IT'S NOT COMPLETED YET AND IN A VERY RAW STATUS, I WILL UPDATE WHEN I WANT, SO DON'T TRY TO USE IT, AND DON'T FORK IT(YOU CAN STAR OR WATCH IT IF YOU ARE INTEREST IN FOLLOW-UP DEVELOPMENT).
 
+# 警告：本项目并未完成而且处于一个非常原始的状态，我会不定期在我想要更新的时候更新，因此不要尝试运行使用它，并且不要 fork 它（如果你对本项目的后续开发感兴趣，可以点 star 或者 watch）
+
 # NotionEditor
 A Notion's editor implement based on ProseMirror, just for feasibility studies.
 
