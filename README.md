@@ -1,3 +1,5 @@
+# WARNING: IT'S NOT COMPLETED YET AND IN A VERY RAW STATUS, I WILL UPDATE WHEN I WANT, SO DON'T TRY TO USE IT, AND DON'T FORK IT(YOU CAN STAR OR WATCH IT IF YOU ARE INTEREST IN FOLLOW-UP DEVELOPMENT).
+
 # NotionEditor
 A Notion's editor implement based on ProseMirror, just for feasibility studies.
 
