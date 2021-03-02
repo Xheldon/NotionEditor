@@ -7,6 +7,7 @@ import { SHOW_SLASH_POPUP, SELECT_SLASH_POPUP } from '@redux/actions';
 const popup = (state: PopupStateType = {}, action: ActionType) => {
     switch (action.type) {
         case SHOW_SLASH_POPUP:
+            console.log('show:', action.payload);
             return {
                 ...state,
                 ...action.payload // use the text to filter the options for user selected

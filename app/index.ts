@@ -1,51 +1,38 @@
-import { EditorState, Plugin } from 'prosemirror-state';
+
 import { EditorView } from 'prosemirror-view';
-import {Fragment, Slice} from 'prosemirror-model';
-import {findWrapping, ReplaceAroundStep} from 'prosemirror-transform';
 
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import ReactRootApp from '@components/index';
-
-
-import { schemas } from '@schemas';
-import { plugins } from '@plugins';
+import Editor from './editor';
 
 import './style.scss';
 
 declare global {
     interface Window {
-        d(): void,
-        v: EditorView
+        NEDITOR: any
+    }
+}
+interface NotionEditorInterface {
+    editor: any;
+}
+class NotionEditor implements NotionEditorInterface {
+    editor: any;
+    constructor(options = {}) {
+        this.editor = null;
+        this.active(options);
+    }
+
+    active(options: any) {
+        this.editor = new Editor(options);
     }
 }
 
-const root = document.getElementById('n-editor');
-
-const state = EditorState.create({
-    schema: schemas,
-    plugins: plugins.concat(new Plugin({
-            props: {
-                handleClick(view: EditorView, pos: number): boolean {
-                    return false;
-                }
-            }
-        }))
-});
-
-const view = new EditorView({ mount: root }, {
-    state,
-    editable(view): boolean {
-        // Note: At the beginning, i want to design the structure like notion, such as not make the whole document contenteditable make the atom block instead to
-        // but there is a problem which make the plugin view not update, so i have to return it back, sad.
-        return true;
-    },
-    attributes(state) {
-        return {
-            style: 'box-sizing: border-box;'
-        }
-    }
-});
-
+// Note: This should init by Client, we mock it.
+document.addEventListener('DOMContentLoaded', () => window.NEDITOR = new NotionEditor({
+    title: 'NotionEditor',
+    root: 'n-editor'
+    // other config
+}));
 // react view
 render(ReactRootApp(), document.getElementById('n-component'));

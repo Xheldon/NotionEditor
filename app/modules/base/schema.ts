@@ -1,4 +1,5 @@
 import {DOMOutputSpec, Node } from 'prosemirror-model';
+import { defaultSchemaAttrs } from '@utils/schema-helper'
 
 export const doc = {
     content: '(block | section)+'
@@ -6,12 +7,7 @@ export const doc = {
 
 export const section = {
     attrs: {
-        class: {
-            default: 'n-section'
-        },
-        type: {
-            default: 'section'
-        },
+        ...defaultSchemaAttrs('section'),
         style: {
             default: 'display: flex;'
         }
@@ -23,29 +19,6 @@ export const section = {
     }
 };
 
-// textblock 是唯一能够直接包含 text 的元素
-export const textBlock = {
-    attrs: {
-        class: {
-            default: 'n-text-block'
-        },
-        type: {
-            default: 'text-block'
-        },
-        style: {
-            default: ''
-        },
-        'n-atom': {
-            default: ''
-        }
-    },
-    group: 'textBlock',
-    content: 'inline*',
-    toDOM(node: Node): DOMOutputSpec {
-        return ['div', node.attrs, 0]
-    }
-};
-
 export const text = {
-    group: 'inline'
+    group: 'inline',
 };

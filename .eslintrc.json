@@ -18,5 +18,13 @@
   },
   "rules": {
     "eqeqeq": [1, "allow-null"]
-  }
+  },
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx"],
+      "parserOptions": {
+        "project": ["./tsconfig.json"]
+      }
+    }
+  ]
 }

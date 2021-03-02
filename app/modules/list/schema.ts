@@ -1,20 +1,15 @@
 import { Node, DOMOutputSpec } from "prosemirror-model";
-
+import {hasType, defaultParseDom, defaultSchemaAttrs} from '@utils/schema-helper';
 export const ul = {
     attrs: {
-        class: {
-            default: 'n-unordered-list'
-        },
-        type: {
-            default: 'un-order-list'
-        },
-        style: {
-            default: ''
-        }
+        ...defaultSchemaAttrs('bullet-list'),
     },
     group: 'block',
     defining: true,
-    content: 'textBlock block*',
+    content: 'list_item+',
+    parseDOM: [
+        defaultParseDom('bullet-list'),
+    ],
     toDOM(node: Node): DOMOutputSpec {
         //TODO: only put partial attrs on dom
         return [
@@ -32,19 +27,14 @@ export const ul = {
 
 export const ol = {
     attrs: {
-        class: {
-            default: 'n-ordered-list'
-        },
-        type: {
-            default: 'order-list'
-        },
-        style: {
-            default: ''
-        }
+        ...defaultSchemaAttrs('order-list'),
     },
     group: 'block',
     defining: true,
-    content: 'textBlock block*',
+    content: 'list_item+',
+    parseDOM: [
+        defaultParseDom('order-list')
+    ],
     toDOM(node: Node): DOMOutputSpec {
         //TODO: only put partial attrs on dom
         return [
@@ -59,3 +49,18 @@ export const ol = {
         ]
     }
 };
+
+export const list_item = {
+    attrs: {
+        ...defaultSchemaAttrs('list-item'),
+    },
+    group: 'list_item',
+    defining: true,
+    content: 'paragraph block*',
+    parseDOM: [
+        defaultParseDom('list-item')
+    ],
+    toDOM(node: Node): DOMOutputSpec {
+        return ['div', node.attrs, 0];
+    }
+}

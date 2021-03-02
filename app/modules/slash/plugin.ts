@@ -5,7 +5,8 @@ import { ViewReturn } from '@interfaces';
 
 import { View } from '@components/commons/View';
 import SlashPopupView from '@components/slash/slash-popup';
-import { SHOW_SLASH_POPUP } from '@redux/actions';
+import { showPopup, SHOW_SLASH_POPUP } from '@redux/actions';
+import { rdxDispatch } from '@redux/store';
 
 export const slashPopupPluginKey = new PluginKey('slash-popup');
 
@@ -19,6 +20,7 @@ export const slashPopupPlugin: () => Plugin = () => new Plugin({
             if (newState.selection.empty) {
                 // Note: the inputrule trigger the slash input, so we set it into the state directly to make it could update the SlashPlugin view
                 let meta = tr.getMeta(slashPopupPluginKey);
+                console.log('meta:', meta);
                 if (meta) {
                     return meta;
                 } else {

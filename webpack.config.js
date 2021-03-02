@@ -6,6 +6,7 @@ const env = process.env.NODE_ENV || 'development';
 
 module.exports = {
     mode: env,
+    devtool: 'eval-source-map',
     entry: path.resolve(__dirname, 'app/index.ts'),
     output: {
         path: path.resolve(__dirname, 'build'),
