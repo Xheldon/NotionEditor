@@ -1,12 +1,16 @@
 import React, { ReactElement } from 'react';
 import { EditorView } from 'prosemirror-view';
 import { EditorState } from 'prosemirror-state';
+import { Node } from 'prosemirror-model';
 
 import { slashPopupPluginKey } from '@modules/slash/plugin';
 import { insertlist, insertparagraph } from '@commands';
 import { StateType } from '@redux/interface';
 
 import './style.scss';
+import { compose } from 'redux';
+import {connect} from 'react-redux';
+import { withEditor } from '@components/context';
 
 // make a list which has a title property to filter, a content to show and a handler to response;
 
@@ -44,32 +48,35 @@ const actionList = [
     }
 ];
 
-function SlashPopupView(view: EditorView, prevState: EditorState, reduxState: StateType): ReactElement {
-    console.log('按下箭头, 能否执行到此?');
-    let state = view.state; // new state;
+function SlashPopupComponent(props: any) {
+    console.log('props:', props);
+    const {editor, editor: {view}, from, to, text, prevState, newState} = props;
+    
+    let state = newState; // new state;
     if (
         prevState && prevState.doc.eq(state.doc)
         && prevState.selection.eq(state.selection)
     ) {
-        return;
+        return null;
     }
-    let meta = slashPopupPluginKey.getState(state);
     let style = null;
-    if (meta) {
-        let pos = view.coordsAtPos(meta.start);
+    if (from && to) {
+        let pos = view.coordsAtPos(from);
         style = {
             left: pos.left + 'px',
             top: pos.bottom + 'px'
         };
-        let filterText = meta.filterText && meta.filterText.slice(1) || '';
+        //Note: use new state to get the filterText
+        let filterText = state.doc.textBetween(from, to).slice(1);
+        console.log('filterText:', filterText);
         let childList: ReactElement[] = actionList.map((arg, k) => {
             if ((new RegExp(`${filterText}`, 'g')).test(arg.title)) {
                 // const isActive = k === 0 || reduxState.popup.options.currentSelect === arg.title;
                 return <div className={false ? 'active' : ''} key={arg.title} onClick={arg.handler.bind(null, {
                     view,
                     options: {
-                        start: meta.start,
-                        end: meta.end
+                        start: from,
+                        end: to
                     }
                 })}>{arg.content()}</div>
             }
@@ -89,4 +96,18 @@ function SlashPopupView(view: EditorView, prevState: EditorState, reduxState: St
     return null;
 }
 
-export default SlashPopupView;
+// TODO: state type
+const mapStateToProps = (state: any) => {
+    return {
+        from: state.popup.options.from,
+        to: state.popup.options.to,
+        text: state.popup.options.text,
+        prevState: state.popup.options.prevState,
+        newState: state.popup.options.newState,
+    }
+};
+
+export default compose(
+    withEditor,
+    connect(mapStateToProps),
+)(SlashPopupComponent);

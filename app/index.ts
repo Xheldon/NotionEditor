@@ -6,6 +6,7 @@ import { Provider } from 'react-redux';
 import ReactRootApp from '@components/index';
 import Editor from './editor';
 
+// import 'prosemirror-view/dist/style/prosemirror.css';
 import './style.scss';
 
 declare global {

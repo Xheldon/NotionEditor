@@ -35,6 +35,14 @@ class App extends Component<{}, AppState> {
         }
     }
 
+    componentDidMount() {
+        if (!this.state.editor) {
+            this.setState({
+                editor: window.NEDITOR.getEditor()
+            });
+        }
+    }
+
     render() {
         const {editor} = this.state;
         const Com = connect((state: StateType) => {

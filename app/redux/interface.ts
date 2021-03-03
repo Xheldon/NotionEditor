@@ -27,6 +27,5 @@ export interface ReactViewType {
 export interface PopupType {
     type: string;
     component: ReactElement;
-    view?: EditorView;
     options?: any;
 }
