@@ -18,7 +18,7 @@ import listPlugin from '@modules/list/plugin';
 import debug from '@modules/debug/debug';
 
 export const plugins: Plugin[] = [
-    typebehinds(),
+    // typebehinds(),
     // selectionPlugin(),
     listPlugin(),
     keymap(baseKeymap),

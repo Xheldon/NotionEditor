@@ -45,5 +45,12 @@ export const slashPopupPlugin: () => Plugin = () => new Plugin({
                 }
             }
         }
+    },
+    props: {
+        handleTextInput(view, from, to, text) {
+            const {state: {tr}, dispatch}  = view;
+            dispatch(tr.setMeta(slashPopupPluginKey, {from, to, text}));
+            return false;
+        }
     }
 });

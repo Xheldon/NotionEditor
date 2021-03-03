@@ -26,13 +26,16 @@ class NotionEditor implements NotionEditorInterface {
     active(options: any) {
         this.editor = new Editor(options);
     }
+
+    getEditor() {
+        return this.editor;
+    }
 }
 
-// Note: This should init by Client, we mock it.
-document.addEventListener('DOMContentLoaded', () => window.NEDITOR = new NotionEditor({
+window.NEDITOR = new NotionEditor({
     title: 'NotionEditor',
     root: 'n-editor'
     // other config
-}));
+})
 // react view
 render(ReactRootApp(), document.getElementById('n-component'));
